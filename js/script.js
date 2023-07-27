@@ -41,8 +41,17 @@
 	const deadline = "2024-05-20";
 
 	function getTimeRemaining(endtime) {
-		const total = Date.parse(endtime) - Date.parse(new Date()),
-			days = Math.floor(total / (1000 * 60 * 60 * 24)),
+		const total = Date.parse(endtime) - Date.parse(new Date());
+		if (total <= 0) {
+			return {
+				"total": 0,
+				"days": 0,
+				"hours": 0,
+				"minutes": 0,
+				"seconds": 0
+			};
+		}
+		const days = Math.floor(total / (1000 * 60 * 60 * 24)),
 			hours = Math.floor(total / (1000 * 60 * 60) % 24),
 			minutes = Math.floor(total / (1000 * 60) % 60),
 			seconds = Math.floor(total / 1000 % 60);
@@ -81,5 +90,56 @@
 	}
 
 	setClock(".timer", deadline);
+
+	// Modal
   
+	const modalButton = document.querySelectorAll("[data-modal]"),
+		closeButton = document.querySelector("[data-close"),
+		modal = document.querySelector(".modal");
+
+	const modalTimeout = setTimeout(showModal, 10000);
+		
+	function showModal() {
+		modal.classList.remove("hide");
+		modal.classList.add("show");
+		document.body.classList.add("inactive");
+		clearInterval(modalTimeout);
+		
+	}
+	function hideModal() {
+		modal.classList.remove("show");
+		modal.classList.add("hide");
+		document.body.classList.remove("inactive");
+	}
+
+	modalButton.forEach(item => {
+		item.addEventListener("click", () => {
+			showModal();
+		});
+	});
+
+	closeButton.addEventListener("click", () => {
+		hideModal();
+	});
+
+	modal.addEventListener("click", (event) => {
+		if (event.target && event.target == modal) {
+			hideModal();
+		}
+	});
+
+	document.addEventListener("keydown", (event) => {
+		if (event.code == "Escape" && modal.classList.contains("show")) {
+			hideModal();
+		}
+	});
+
+	function showModalByScroll() {
+		if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
+			showModal();
+			window.removeEventListener("scroll", showModalByScroll);
+		}
+	}
+
+	window.addEventListener("scroll", showModalByScroll);
 });
