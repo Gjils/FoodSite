@@ -24,7 +24,7 @@
 	hideTabContent();
 	showTabContent();
 
-	tabheaderItems.addEventListener("click", event => {
+	tabheaderItems.addEventListener("click", (event) => {
 		const target = event.target;
 		if (target && target.classList.contains("tabheader__item")) {
 			tabs.forEach((item, i) => {
@@ -44,19 +44,19 @@
 		const total = Date.parse(endtime) - Date.parse(new Date());
 		if (total <= 0) {
 			return {
-				"total": 0,
-				"days": 0,
-				"hours": 0,
-				"minutes": 0,
-				"seconds": 0
+				total: 0,
+				days: 0,
+				hours: 0,
+				minutes: 0,
+				seconds: 0,
 			};
 		}
 		const days = Math.floor(total / (1000 * 60 * 60 * 24)),
-			hours = Math.floor(total / (1000 * 60 * 60) % 24),
-			minutes = Math.floor(total / (1000 * 60) % 60),
-			seconds = Math.floor(total / 1000 % 60);
+			hours = Math.floor((total / (1000 * 60 * 60)) % 24),
+			minutes = Math.floor((total / (1000 * 60)) % 60),
+			seconds = Math.floor((total / 1000) % 60);
 
-		return {total, days, hours, minutes, seconds};
+		return { total, days, hours, minutes, seconds };
 	}
 
 	function getZero(number) {
@@ -92,18 +92,17 @@
 	setClock(".timer", deadline);
 
 	// Modal
-  
+
 	const modalButton = document.querySelectorAll("[data-modal]"),
 		modal = document.querySelector(".modal");
 
 	const modalTimeout = setTimeout(showModal, 50000);
-		
+
 	function showModal() {
 		modal.classList.remove("hide");
 		modal.classList.add("show");
 		document.body.classList.add("inactive");
 		clearInterval(modalTimeout);
-		
 	}
 	function hideModal() {
 		modal.classList.remove("show");
@@ -111,14 +110,17 @@
 		document.body.classList.remove("inactive");
 	}
 
-	modalButton.forEach(item => {
+	modalButton.forEach((item) => {
 		item.addEventListener("click", () => {
 			showModal();
 		});
 	});
 
 	modal.addEventListener("click", (event) => {
-		if (event.target && event.target === modal || event.target.getAttribute("data-close") == "") {
+		if (
+			(event.target && event.target === modal) ||
+			event.target.getAttribute("data-close") == ""
+		) {
 			hideModal();
 		}
 	});
@@ -130,7 +132,10 @@
 	});
 
 	function showModalByScroll() {
-		if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
+		if (
+			window.scrollY + document.documentElement.clientHeight >=
+			document.documentElement.scrollHeight - 1
+		) {
 			showModal();
 			window.removeEventListener("scroll", showModalByScroll);
 		}
@@ -146,13 +151,13 @@
 			this.name = name;
 			this.descr = descr;
 			this.price = price;
-			this.parent = document.querySelector(parentSelector); 
+			this.parent = document.querySelector(parentSelector);
 			this.transfer = 1;
 			this.changeToUAH();
 		}
 
 		changeToUAH() {
-			this.price *= this.transfer; 
+			this.price *= this.transfer;
 		}
 
 		render() {
@@ -171,19 +176,39 @@
 
 			this.parent.append(element);
 		}
-
 	}
 
-	new MenuCard("img/tabs/vegy.jpg", "vegy", "Меню \"Фитнес\"", `Меню "Фитнес" - это новый подход к приготовлению блюд: больше
-	свежих овощей и фруктов. Продукт активных и здоровых людей. Это
-	абсолютно новый продукт с оптимальной ценой и высоким качеством!`, 229, ".menu__field .container").render();
-	new MenuCard("img/tabs/elite.jpg", "elite", "Меню \"Премиум\"", `В меню “Премиум” мы используем не только красивый дизайн упаковки,
-	но и качественное исполнение блюд. Красная рыба, морепродукты,
-	фрукты - ресторанное меню без похода в ресторан!`, 550, ".menu__field .container").render();
-	new MenuCard("img/tabs/post.jpg", "post", "Меню \"Постное\"", `Меню “Постное” - это тщательный подбор ингредиентов: полное
-	отсутствие продуктов животного происхождения, молоко из миндаля,
-	овса, кокоса или гречки, правильное количество белков за счет тофу
-	и импортных вегетарианских стейков.`, 430, ".menu__field .container").render();
+	// new MenuCard(
+	// 	"img/tabs/vegy.jpg",
+	// 	"vegy",
+	// 	'Меню "Фитнес"',
+	// 	`Меню "Фитнес" - это новый подход к приготовлению блюд: больше
+	// свежих овощей и фруктов. Продукт активных и здоровых людей. Это
+	// абсолютно новый продукт с оптимальной ценой и высоким качеством!`,
+	// 	229,
+	// 	".menu__field .container",
+	// ).render();
+	// new MenuCard(
+	// 	"img/tabs/elite.jpg",
+	// 	"elite",
+	// 	'Меню "Премиум"',
+	// 	`В меню “Премиум” мы используем не только красивый дизайн упаковки,
+	// но и качественное исполнение блюд. Красная рыба, морепродукты,
+	// фрукты - ресторанное меню без похода в ресторан!`,
+	// 	550,
+	// 	".menu__field .container",
+	// ).render();
+	// new MenuCard(
+	// 	"img/tabs/post.jpg",
+	// 	"post",
+	// 	'Меню "Постное"',
+	// 	`Меню “Постное” - это тщательный подбор ингредиентов: полное
+	// отсутствие продуктов животного происхождения, молоко из миндаля,
+	// овса, кокоса или гречки, правильное количество белков за счет тофу
+	// и импортных вегетарианских стейков.`,
+	// 	430,
+	// 	".menu__field .container",
+	// ).render();
 
 	// Forms
 
@@ -192,10 +217,10 @@
 	const message = {
 		loading: "img/form/spinner.svg",
 		success: "Спасибо, скоро мы с вами свяжемся",
-		failure: "Что-то пошло не так"
+		failure: "Что-то пошло не так",
 	};
 
-	function postData(form) {
+	function bindPostData(form) {
 		form.addEventListener("submit", (event) => {
 			event.preventDefault();
 
@@ -218,22 +243,25 @@
 				headers: {
 					"Content-type": "application/json",
 				},
-				body: json
-			}).then(data => data.text())
+				body: json,
+			})
+				.then((data) => data.text())
 				.then((data) => {
 					console.log(data);
 					showThanksModal(message.success);
-				}).catch(() => {
+				})
+				.catch(() => {
 					showThanksModal(message.failure);
-				}).finally(() => {
+				})
+				.finally(() => {
 					form.reset();
 					statusMessage.remove();
 				});
 		});
 	}
 
-	forms.forEach(item => {
-		postData(item);
+	forms.forEach((item) => {
+		bindPostData(item);
 	});
 
 	function showThanksModal(message) {
