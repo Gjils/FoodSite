@@ -283,7 +283,6 @@
 
 			postData("http://localhost:3000/requests", json)
 				.then((data) => {
-					console.log(data);
 					showThanksModal(message.success);
 					statusMessage.remove();
 				})
@@ -320,16 +319,15 @@
 			hideModal();
 		}, 4000);
 	}
-});
 
-// Slider
-
-const createSlider = function (sliderBody, slideClass, sliderFieldClass) {
-	let current = -1;
-	const slides = sliderBody.querySelectorAll(slideClass);
-	const sliderField = sliderBody.querySelector(sliderFieldClass);
-	console.log(sliderField);
-	const width = window.getComputedStyle(sliderBody).width;
+	// Slider
+	const sliderWrapper = document.querySelector(".offer__slider-wrapper");
+	const slideClass = ".offer__slide";
+	const sliderFieldClass = ".offer__slider-inner";
+	let current = 0;
+	const slides = sliderWrapper.querySelectorAll(slideClass);
+	const sliderField = sliderWrapper.querySelector(sliderFieldClass);
+	const width = window.getComputedStyle(sliderWrapper).width;
 
 	sliderField.style.width = 100 * slides.length + "%";
 
@@ -337,6 +335,25 @@ const createSlider = function (sliderBody, slideClass, sliderFieldClass) {
 		slide.style.width = width;
 	});
 
+	const slider = document.querySelector(".offer__slider");
+
+	const sliderIndicators = document.createElement("div");
+	sliderIndicators.classList.add("carousel-indicators");
+	for (let i = 0; i < slides.length; i++) {
+		const dot = document.createElement("div");
+		dot.classList.add("dot");
+		dot.dataset.index = i;
+		if (i == current) {
+			dot.classList.add("active");
+		}
+		sliderIndicators.append(dot);
+	}
+
+	const makeInactive = function () {
+		sliderIndicators.querySelectorAll(".dot").forEach((item) => {
+			item.classList.remove("active");
+		});
+	};
 	// const hideAll = function () {
 	// 	slides.forEach((item) => {
 	// 		item.classList.add("hide");
@@ -345,52 +362,61 @@ const createSlider = function (sliderBody, slideClass, sliderFieldClass) {
 	// const showCur = function () {
 	// 	slides[current].classList.remove("hide");
 	// };
-	const showNext = function () {
+
+	const showCurrent = function () {
+		sliderField.style.transform = `translateX(${
+			-1 * parseFloat(width) * current
+		}px)`;
+	};
+	const increaseCurrent = function () {
 		current += 1;
 		if (current == slides.length) {
 			current = 0;
 		}
-		console.log(`translateX(${-1 * parseFloat(width) * current}px)`)
-		sliderField.style.transform = `translateX(${-1 * parseFloat(width) * current}px)`
-		// hideAll();
-		// showCur();
 	};
-	const showPrev = function () {
+	const decreaseCurrent = function () {
 		current -= 1;
 		if (current == -1) {
 			current = slides.length - 1;
 		}
-		console.log(`translateX(${-1 * parseFloat(width) * current}px)`)
-		sliderField.style.transform = `translateX(${-1 * parseFloat(width) * current}px)`;
-		// hideAll();
-		// showCur();
 	};
-	const getCur = function () {
+	const getCurSlide = function () {
 		return current + 1 < 10 ? "0" + (current + 1) : current + 1;
 	};
-	const total = slides.length < 10 ? "0" + slides.length : slides.length;
-	return [showNext, showPrev, getCur, total];
-};
 
-sliderWrapper = document.querySelector(".offer__slider-wrapper");
-const [showNextSlide, showPrevSlide, getCurSlide, totalSlides] = createSlider(
-	sliderWrapper,
-	".offer__slide",
-	".offer__slider-inner",
-);
-showNextSlide();
+	const totalSlides = slides.length < 10 ? "0" + slides.length : slides.length;
+	const sliderCounter = document.querySelector(".offer__slider-counter");
+	sliderCounter.querySelector("#total").innerHTML = totalSlides;
+	sliderCounter
+		.querySelector(".offer__slider-prev")
+		.addEventListener("click", () => {
+			decreaseCurrent();
+			showCurrent();
+			makeInactive();
+			sliderIndicators.querySelectorAll(".dot")[current].classList.add("active");
+			sliderCounter.querySelector("#current").innerHTML = getCurSlide();
+		});
+	sliderCounter
+		.querySelector(".offer__slider-next")
+		.addEventListener("click", () => {
+			increaseCurrent();
+			showCurrent();
+			makeInactive();
+			sliderIndicators.querySelectorAll(".dot")[current].classList.add("active");
+			sliderCounter.querySelector("#current").innerHTML = getCurSlide();
+		});
 
-const sliderCounter = document.querySelector(".offer__slider-counter");
-sliderCounter.querySelector("#total").innerHTML = totalSlides;
-sliderCounter
-	.querySelector(".offer__slider-prev")
-	.addEventListener("click", () => {
-		showPrevSlide();
-		sliderCounter.querySelector("#current").innerHTML = getCurSlide();
+	showCurrent();
+
+	sliderIndicators.addEventListener("click", (event) => {
+		if (event.target.classList.contains("dot")) {
+			current = +event.target.dataset.index;
+			showCurrent();
+			makeInactive();
+			event.target.classList.add("active");
+			sliderCounter.querySelector("#current").innerHTML = getCurSlide();
+		}
 	});
-sliderCounter
-	.querySelector(".offer__slider-next")
-	.addEventListener("click", () => {
-		showNextSlide();
-		sliderCounter.querySelector("#current").innerHTML = getCurSlide();
-	});
+
+	slider.append(sliderIndicators);
+});
