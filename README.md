@@ -6,6 +6,6 @@ Foodsite is project from [js course](https://www.udemy.com/course/javascript_ful
 ***
 ![calculator](https://github.com/Gjils/foodsite/blob/main/preview/calculator.png)
 > Calculator
-> ***
+***
 ![modal](https://github.com/Gjils/foodsite/blob/main/preview/modal.png)
 > Modal
