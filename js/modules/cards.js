@@ -1,3 +1,5 @@
+import { json } from "body-parser";
+
 function cards(parentSelector, dbUrl) {
 	class MenuCard {
 		constructor(src, alt, name, descr, price, parentSelector) {
@@ -44,7 +46,7 @@ function cards(parentSelector, dbUrl) {
 	}
 
 	getResource(dbUrl).then((data) => {
-		data.forEach(({ img, altimg, title, descr, price }) => {
+		data.menu.forEach(({ img, altimg, title, descr, price }) => {
 			new MenuCard(img, altimg, title, descr, price, parentSelector).render();
 		});
 	});

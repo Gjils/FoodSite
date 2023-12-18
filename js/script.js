@@ -13,7 +13,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	tabs(".tabheader__item", ".tabheader__items", ".tabcontent");
 	modal("[data-modal]", ".modal", modalTimeout);
 	timer(".timer", "2024-05-20");
-	cards(".menu__field .container", "http://localhost:3000/menu");
+	cards(".menu__field .container", "db.json");
 	calculator(
 		".calculating__field",
 		"[data-sex]",
