@@ -164,11 +164,14 @@
 					<div class="calculating__subtitle">Ваш пол</div>
 					<div class="calculating__choose" id="gender">
 						<div
-							class="calculating__choose-item calculating__choose-item_active"
+							data-sex="female"
+							class="calculating__choose-item"
 						>
 							Женщина
 						</div>
-						<div class="calculating__choose-item">Мужчина</div>
+						<div data-sex="male" class="calculating__choose-item">
+							Мужчина
+						</div>
 					</div>
 
 					<div class="calculating__subtitle">Ваша конституция</div>
@@ -197,19 +200,20 @@
 						Выберите вашу физическая активность
 					</div>
 					<div class="calculating__choose calculating__choose_big">
-						<div id="low" class="calculating__choose-item">
+						<div data-ratio="1.2" id="low" class="calculating__choose-item">
 							Низкая активность
 						</div>
 						<div
+							data-ratio="1.33"
 							id="small"
-							class="calculating__choose-item calculating__choose-item_active"
+							class="calculating__choose-item"
 						>
 							Невысокая активность
 						</div>
-						<div id="medium" class="calculating__choose-item">
+						<div data-ratio="1.55" id="medium" class="calculating__choose-item">
 							Умеренная активность
 						</div>
-						<div id="high" class="calculating__choose-item">
+						<div data-ratio="1.75" id="high" class="calculating__choose-item">
 							Высокая активность
 						</div>
 					</div>
@@ -220,7 +224,7 @@
 						<div class="calculating__subtitle">
 							Ваша суточная норма калорий:
 						</div>
-						<div class="calculating__result"><span>2700</span> ккал</div>
+						<div class="calculating__result"><span>____</span> ккал</div>
 					</div>
 				</div>
 			</div>

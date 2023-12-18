@@ -393,7 +393,9 @@
 			decreaseCurrent();
 			showCurrent();
 			makeInactive();
-			sliderIndicators.querySelectorAll(".dot")[current].classList.add("active");
+			sliderIndicators
+				.querySelectorAll(".dot")
+				[current].classList.add("active");
 			sliderCounter.querySelector("#current").innerHTML = getCurSlide();
 		});
 	sliderCounter
@@ -402,7 +404,9 @@
 			increaseCurrent();
 			showCurrent();
 			makeInactive();
-			sliderIndicators.querySelectorAll(".dot")[current].classList.add("active");
+			sliderIndicators
+				.querySelectorAll(".dot")
+				[current].classList.add("active");
 			sliderCounter.querySelector("#current").innerHTML = getCurSlide();
 		});
 
@@ -419,4 +423,99 @@
 	});
 
 	slider.append(sliderIndicators);
+
+	// Calculator
+
+	const hideAll = function (array, activeClass) {
+		array.forEach((element) => {
+			element.classList.remove(activeClass);
+		});
+	};
+	const showElement = function (element, activeClass) {
+		element.classList.add(activeClass);
+	};
+	const calculateCallories = function (
+		{ sex, ratio, height, weight, age } = personProperties,
+		resultBlock,
+	) {
+		localStorage.setItem("sex", sex);
+		localStorage.setItem("ratio", ratio);
+		localStorage.setItem("height", height);
+		localStorage.setItem("weight", weight);
+		localStorage.setItem("age", age);
+		if (sex && ratio && height && weight && age) {
+			let callories = null;
+			if (sex === "male") {
+				callories = (10 * weight + 6.25 * height - 5 * age + 5) * ratio;
+			} else {
+				callories = (10 * weight + 6.25 * height - 5 * age - 161) * ratio;
+			}
+			callories = Math.floor(callories);
+			if (callories >= 0) {
+				resultBlock.textContent = callories;
+			} else {
+				resultBlock.textContent = "____";
+			}
+		} else {
+			resultBlock.textContent = "____";
+		}
+	};
+	const calculatorWrapper = document.querySelector(".calculating__field"),
+		sexOptions = document.querySelectorAll("[data-sex]"),
+		resultBlock = document.querySelector(".calculating__result span");
+	(activityOptions = document.querySelectorAll("[data-ratio]")),
+		(personProperties = {
+			sex: localStorage.getItem("sex") || "male",
+			ratio: localStorage.getItem("ratio") || 1.33,
+			height: localStorage.getItem("height") || null,
+			weight: localStorage.getItem("weight") || null,
+			age: localStorage.getItem("age") || null,
+		}),
+		(inputSelectors = ["height", "weight", "age"]);
+	hideAll(sexOptions, "calculating__choose-item_active");
+	sexOptions.forEach((element) => {
+		if (element.dataset.sex === personProperties.sex) {
+			showElement(element, "calculating__choose-item_active");
+		}
+	});
+	hideAll(activityOptions, "calculating__choose-item_active");
+	activityOptions.forEach((element) => {
+		if (element.dataset.ratio === personProperties.ratio) {
+			showElement(element, "calculating__choose-item_active");
+		}
+	});
+	inputSelectors.forEach((selector) => {
+		element = document.querySelector(`#${selector}`);
+		if (+personProperties[selector]) {
+			element.value = personProperties[selector];
+		}
+	});
+	calculateCallories(personProperties, resultBlock);
+
+	calculatorWrapper.addEventListener("click", (event) => {
+		if (event.target.hasAttribute("data-sex")) {
+			hideAll(sexOptions, "calculating__choose-item_active");
+			showElement(event.target, "calculating__choose-item_active");
+			personProperties.sex = event.target.dataset.sex;
+			calculateCallories(personProperties, resultBlock);
+		}
+		if (event.target.hasAttribute("data-ratio")) {
+			hideAll(activityOptions, "calculating__choose-item_active");
+			showElement(event.target, "calculating__choose-item_active");
+			personProperties.ratio = +event.target.dataset.ratio;
+			calculateCallories(personProperties, resultBlock);
+		}
+	});
+	inputSelectors.forEach((selector) => {
+		element = document.querySelector(`#${selector}`);
+		element.addEventListener("input", (event) => {
+			if (event.target.value.match(/\D/g)) {
+				event.target.classList.add("wrong-input");
+			} else {
+				event.target.classList.remove("wrong-input");
+			}
+			personProperties[selector] = +event.target.value;
+			calculateCallories(personProperties, resultBlock);
+		});
+	});
 });
